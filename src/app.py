@@ -225,6 +225,7 @@ class App:
         self.ctx = ExecContext(self.robot, self.channels, log_fn=self.log)
         self.executor = Executor(self.ctx)
         self.thread = None
+        self.loop_run = False               # 循环运行开关 (默认关=跑一轮停)
 
         # 文件选择对话框状态 (纯 pygame 实现, 避免 tkinter 与 pygame 冲突)
         self.file_dialog_open = False
@@ -269,6 +270,10 @@ class App:
         self.speed_btns[2.0] = pygame.Rect(px + (bw+8)*2, y + 10, bw, 30)
         self.speed_btns[4.0] = pygame.Rect(px + (bw+8)*3, y + 10, bw, 30)
         y += 60
+        # 循环运行复选框
+        self.loop_check = pygame.Rect(px + 4, y + 6, 18, 18)
+        self.loop_label_y = y + 8
+        y += 34
         # 参数输入框 (两列布局)
         if self.fields:
             fy = y
@@ -375,6 +380,7 @@ class App:
         self.running = True
         self.paused = False
         self.ctx.running = True
+        self.ctx.loop = self.loop_run     # 循环/单次模式
         self._apply_params(save=True)     # 运行前收集界面参数并写入 config.json
         self.thread = threading.Thread(target=self._run_executor, daemon=True)
         self.thread.start()
@@ -721,6 +727,10 @@ class App:
             if rect.collidepoint(pos):
                 self.speed_factor = sf
                 self.log(f"速度倍率: {sf}x")
+        # 循环运行开关
+        if self.loop_check.collidepoint(pos):
+            self.loop_run = not self.loop_run
+            self.log(f"循环运行: {'开' if self.loop_run else '关'}")
 
     def _on_key(self, key):
         if key == pygame.K_SPACE:
@@ -842,6 +852,16 @@ class App:
             pygame.draw.rect(self.screen, col, rect, border_radius=5)
             t = self.font_small.render(f"{sf}x", True, (10, 10, 10))
             self.screen.blit(t, (rect.x + 22, rect.y + 7))
+        # 循环运行开关
+        chk = self.loop_check
+        pygame.draw.rect(self.screen, (60, 64, 78), chk, border_radius=3)
+        if self.loop_run:
+            pygame.draw.line(self.screen, COL_ACCENT,
+                             (chk.x + 4, chk.y + 9), (chk.x + 8, chk.y + 13), 3)
+            pygame.draw.line(self.screen, COL_ACCENT,
+                             (chk.x + 8, chk.y + 13), (chk.x + 14, chk.y + 4), 3)
+        lt = self.font_small.render("循环运行 (对齐真车, 否则跑一轮停)", True, COL_TEXT)
+        self.screen.blit(lt, (chk.x + 26, self.loop_label_y))
         # 仿真参数 (可编辑, 运行后写入 config.json)
         if self.fields:
             ptitle = self.font_small.render("仿真参数 (运行后写入 config.json)",

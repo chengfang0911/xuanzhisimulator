@@ -21,6 +21,7 @@ class ExecContext:
         self.robot = robot_state
         self.channels = channels          # {1: val, 2: val, ...}
         self.running = True               # 是否运行中
+        self.loop = False                 # True=对齐真车无限循环; False=跑一轮自动停机
         self.speed_factor = 1.0           # 模拟速度倍率 (1.0=实时)
         self.log_fn = log_fn or (lambda *a, **k: None)
         self.sim_time = 0.0               # 模拟累计时间(秒)
@@ -43,7 +44,10 @@ class Executor:
     # ===== 入口 =====
     def run(self, root: Block):
         """执行根块（通常是 event_m40d_begin）"""
-        self._exec_block(root)
+        # 注意: 必须只执行一次根块。_step(event_m40d_begin) 内部已负责执行其
+        # next 链 (即事件处理体)；若用 _exec_block(root)，外层 while 会再用
+        # root.next_block 把事件体重复执行一遍，导致 forever 等被跑两次。
+        self._step(root)
 
     def _exec_block(self, block: Optional[Block]):
         cur = block
@@ -60,11 +64,20 @@ class Executor:
 
         # ---- 控制流 ----
         if t == 'control_forever':
-            while self.ctx.running:
+            sub = block.statements.get('SUBSTACK')
+            if self.ctx.loop:
+                # 对齐真车: 只要 conditions 满足就无限循环
+                while self.ctx.running:
+                    try:
+                        self._exec_block(sub)
+                    except _StopExecution:
+                        break
+            else:
+                # 单次运行: 整段跑一遍后返回, 由调用方自动停机
                 try:
-                    self._exec_block(block.statements.get('SUBSTACK'))
+                    self._exec_block(sub)
                 except _StopExecution:
-                    break
+                    pass
             return
         if t in ('control_stop', '结束'):
             # "结束"块：跳出当前循环 (forever/repeat)，等效于 break
