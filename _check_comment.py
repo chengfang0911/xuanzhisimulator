@@ -3,7 +3,7 @@ import sys
 sys.path.insert(0, 'src')
 from parser.xml_parser import parse_xuanzhi_file
 
-b = parse_xuanzhi_file('test.XUANZHI')
+b = parse_xuanzhi_file('samples/test.XUANZHI')
 
 def find_comments(bl, depth=0):
     results = []

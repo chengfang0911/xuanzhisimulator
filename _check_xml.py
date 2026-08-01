@@ -1,7 +1,7 @@
 import re
 from collections import Counter
 
-with open('test.XUANZHI', 'r', encoding='utf-8') as f:
+with open('samples/test.XUANZHI', 'r', encoding='utf-8') as f:
     txt = f.read()
 
 types = re.findall(r'type="([^"]+)"', txt)
