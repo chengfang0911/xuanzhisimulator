@@ -1,0 +1,24 @@
+{
+  "name": "xmindflash",
+  "version": "1.0.12",
+  "private": true,
+  "author": "xz",
+  "main": "background.js",
+  "dependencies": {
+    "@serialport/bindings-cpp": "^10.8.0",
+    "co": "^4.6.0",
+    "electron-store": "^8.1.0",
+    "node-hid": "^2.2.0",
+    "rebuild": "^0.1.2",
+    "serialport": "^10.5.0"
+  },
+  "volta": {
+    "node": "16.20.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
+}

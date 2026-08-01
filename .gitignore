@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 自动生成/用户本地配置
+config.json
+
+# 编辑器/IDE
+.vscode/
+.idea/
+
+# 项目数据
+.codebuddy/
+
+# 依赖 / 构建产物
+node_modules/
+_official_app/node_modules/
+_official_app/dist/
+_official_app/build/
+
