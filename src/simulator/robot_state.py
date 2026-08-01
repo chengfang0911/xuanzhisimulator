@@ -41,7 +41,7 @@ class RobotState:
         """注入/更新物理与电机参数 (来自主界面配置, 含默认值)"""
         p = params or {}
         # ---- 底盘/电机参数 ----
-        self.WHEEL_DIAMETER_MM = float(p.get('wheel_diameter_mm', 45.0))   # 轮子直径
+        self.WHEEL_DIAMETER_MM = float(p.get('wheel_diameter_mm', 44.0))   # 轮子直径 (官方教程: 44mm 海绵轮)
         self.WHEELBASE_MM = float(p.get('wheelbase_mm', 75.0))             # 轴距
         self.K_V = float(p.get('k_v', 1.2))                               # 速度系数
         # ---- 电机参数 (来自固件反汇编: pwm = center + speed*per_unit) ----

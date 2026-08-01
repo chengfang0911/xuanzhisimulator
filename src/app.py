@@ -53,7 +53,7 @@ PARAM_FIELDS = [
 ]
 
 DEFAULT_PARAMS = {
-    "wheel_diameter_mm": 45.0,
+    "wheel_diameter_mm": 44.0,
     "wheelbase_mm": 75.0,
     "k_v": 1.2,
     "motor_speed_min": -100,
@@ -333,10 +333,10 @@ class App:
         y = 70
         self.sliders = []
         # 摇杆 (连续)
-        self.sliders.append(Slider("CH1 左摇杆", 1, px, y, w=pw-40)); y += 50
-        self.sliders.append(Slider("CH2 右摇杆", 2, px, y, w=pw-40)); y += 50
-        self.sliders.append(Slider("CH3 上摇杆", 3, px, y, w=pw-40)); y += 50
-        self.sliders.append(Slider("CH4 下摇杆", 4, px, y, w=pw-40)); y += 50
+        self.sliders.append(Slider("CH1 左摇杆↑↓", 1, px, y, w=pw-40)); y += 50
+        self.sliders.append(Slider("CH2 右摇杆←→", 2, px, y, w=pw-40)); y += 50
+        self.sliders.append(Slider("CH3 右摇杆↑↓", 3, px, y, w=pw-40)); y += 50
+        self.sliders.append(Slider("CH4 左摇杆←→", 4, px, y, w=pw-40)); y += 50
         # 按钮开关 (离散)
         self.sliders.append(Slider("CH6 按钮1", 6, px, y, w=pw-40, discrete=True)); y += 50
         self.sliders.append(Slider("CH7 按钮2", 7, px, y, w=pw-40, discrete=True)); y += 50
