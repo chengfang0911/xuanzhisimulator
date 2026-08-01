@@ -54,10 +54,6 @@ class Executor:
     def _step(self, block: Block):
         t = block.type
 
-        # 检查附着在块上的 comment 标签（如 "结束"）
-        if getattr(block, 'comment', None) == '结束':
-            raise _StopExecution()
-
         if t == 'event_m40d_begin':
             self._exec_block(block.next_block)   # 入口：执行后续块
             return  # 注意：begin 不应 return 后再继续 next（已在上面处理）
